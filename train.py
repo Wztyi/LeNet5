@@ -13,11 +13,13 @@ import time
 
 def train_val_process():
     datasets = FashionMNIST(
-        root="./data", train=True, transform=transforms.Compose([transforms.Resize(size=28), transforms.ToTensor()]), download=True
+        root="./data", train=True, transform=transforms.Compose([transforms.Resize(size=28), transforms.ToTensor()]),
+        download=True
     )
-    train_data, val_data = Data.random_split(datasets, [round(0.8 * len(datasets)), round(0.2 * len(datasets))])
-    train_dataloader = Data.DataLoader(dataset=train_data, batch_size=128, shuffle=True, num_workers=0)
-    val_dataloader = Data.DataLoader(dataset=val_data, batch_size=128, shuffle=True, num_workers=0)
+    train_data, val_data = Data.random_split(datasets,
+                                             [round(0.8 * len(datasets)), round(0.2 * len(datasets))])  # 训练集80% 验证集20%
+    train_dataloader = Data.DataLoader(dataset=train_data, batch_size=128, shuffle=True, num_workers=4)
+    val_dataloader = Data.DataLoader(dataset=val_data, batch_size=128, shuffle=True, num_workers=4)
     return train_dataloader, val_dataloader
 
 
@@ -125,10 +127,7 @@ def train_model_process(model, train_dataloader, val_dataloader, num_epochs):
         val_acc_all.append(val_corrects.double().item() / val_num)
 
         print("{} Train Loss: {:.4f} Train Acc: {:.4f}".format(epoch, train_loss_all[-1], train_acc_all[-1]))
-        print("{} Train Loss: {:.4f} Train Acc: {:.4f}".format(epoch, val_loss_all[-1], val_acc_all[-1]))
-
-        # print("{} train loss:{:.4f} train acc: {:.4f}".format(epoch, train_loss_all[-1], train_acc_all[-1]))
-        # print("{} train loss:{:.4f} train acc: {:.4f}".format(epoch, train_loss_all[-1], train_acc_all[-1]))
+        print("{} Val Loss: {:.4f} Train Acc: {:.4f}".format(epoch, val_loss_all[-1], val_acc_all[-1]))
 
         # 寻找最高的准确度权重参数
         if val_acc_all[-1] > best_acc:
@@ -154,7 +153,6 @@ def train_model_process(model, train_dataloader, val_dataloader, num_epochs):
             "val_acc_all": val_acc_all,
         }
     )
-
     return train_process
 
 
@@ -181,7 +179,7 @@ def matplot_acc_loss(train_process):
 if __name__ == "__main__":
     # 实例化模型
     LeNet = LeNet()
-    print(123)
+    print("Start···")
     train_dataloader, val_dataloader = train_val_process()
     train_process = train_model_process(LeNet, train_dataloader, val_dataloader, 40)
     matplot_acc_loss(train_process)

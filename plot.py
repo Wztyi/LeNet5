@@ -4,9 +4,9 @@ import torch.utils.data as Data
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-train_data = FashionMNIST(root="./data", train=True, transform=transforms.Compose([transforms.Resize(size=224), transforms.ToTensor()]), download=True)
-
+train_data = FashionMNIST(root="./data", train=True,
+                          transform=transforms.Compose([transforms.Resize(size=224), transforms.ToTensor()]),
+                          download=True)
 
 # 加载数据并打乱
 train_loader = Data.DataLoader(dataset=train_data, batch_size=64, shuffle=True, num_workers=0)
